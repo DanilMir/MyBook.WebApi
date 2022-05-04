@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.WebApi", "MyBook.WebApi\MyBook.WebApi.csproj", "{D3F0AE15-AE55-4C6B-ABB5-625672E31684}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.Entity", "MyBook.Entity\MyBook.Entity.csproj", "{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D3F0AE15-AE55-4C6B-ABB5-625672E31684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3F0AE15-AE55-4C6B-ABB5-625672E31684}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3F0AE15-AE55-4C6B-ABB5-625672E31684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
