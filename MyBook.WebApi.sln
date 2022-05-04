@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.WebApi", "MyBook.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.Entity", "MyBook.Entity\MyBook.Entity.csproj", "{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.DataAccess", "MyBook.DataAccess\MyBook.DataAccess.csproj", "{C5C0C823-1791-4225-8C11-DCE628168A7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AC2C182-4EA0-4CE2-80C7-524215B8C75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
