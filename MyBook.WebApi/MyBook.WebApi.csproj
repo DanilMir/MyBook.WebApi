@@ -6,122 +6,30 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
+    <PackageReference Include="OpenIddict" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyBook.DataAccess\MyBook.DataAccess.csproj" />
+    <ProjectReference Include="..\MyBook.Entity\MyBook.Entity.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\MyBook.DataAccess\MyBook.DataAccess.csproj" />
-      <ProjectReference Include="..\MyBook.Entity\MyBook.Entity.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\css\auth.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\theme.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\animate.css\animate.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-select\dist\css\bootstrap-select.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap-select\dist\js\bootstrap-select.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\bootstrap.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\flaticon\font\flaticon.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\flaticon\font\Flaticon.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\font-awesome\css\fontawesome-all.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\font-awesome\webfonts\fa-brands-400.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\font-awesome\webfonts\fa-regular-400.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\font-awesome\webfonts\fa-solid-900.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\hs-megamenu\src\hs.megamenu.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\hs-megamenu\src\hs.megamenu.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-migrate\dist\jquery-migrate.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\malihu-custom-scrollbar-plugin\jquery.mCustomScrollbar.concat.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\malihu-custom-scrollbar-plugin\jquery.mCustomScrollbar.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\multilevel-sliding-mobile-menu\dist\jquery.zeynep.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\dist\umd\popper.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\methods\defaults.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\methods\destroy.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\methods\disableEventListeners.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\methods\enableEventListeners.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\methods\update.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\applyStyle.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\arrow.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\computeStyle.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\flip.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\hide.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\inner.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\keepTogether.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\offset.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\preventOverflow.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\modifiers\shift.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\clockwise.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\computeAutoPlacement.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\debounce.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\find.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\findCommonOffsetParent.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\findIndex.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getBordersSize.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getBoundaries.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getBoundingClientRect.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getClientRect.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getFixedPositionOffsetParent.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getOffsetParent.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getOffsetRectRelativeToArbitraryNode.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getOppositePlacement.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getOppositeVariation.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getOuterSizes.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getParentNode.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getPopperOffsets.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getReferenceOffsets.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getRoot.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getScroll.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getScrollParent.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getStyleComputedProperty.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getSupportedPropertyName.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getViewportOffsetRectRelativeToArtbitraryNode.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getWindow.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\getWindowSizes.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\includeScroll.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isBrowser.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isFixed.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isFunction.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isIE.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isModifierEnabled.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isModifierRequired.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isNumeric.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\isOffsetContainer.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\removeEventListeners.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\runModifiers.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\setAttributes.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\setStyles.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\popper.js\src\utils\setupEventListeners.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-carousel\slick\slick.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-carousel\slick\slick.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-carousel\slick\slick.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img1.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img10.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img2.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img3.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img4.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img5.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img6.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img7.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img8.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\120x180\img9.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\1400x530\promo.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img1.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img10.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img2.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img3.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img4.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img5.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img6.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img7.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img8.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\150x226\img9.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\170x129\img1.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\img\280x213\img1.png" />
-    </ItemGroup>
-
+  
 </Project>

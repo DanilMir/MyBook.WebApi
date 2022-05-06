@@ -1,0 +1,84 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using MyBook.DataAccess;
+using MyBook.Entity;
+using MyBook.Entity.Identity;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using static Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults;
+
+namespace MyBook.WebApi;
+
+public static class StartupExtensions
+{
+    public static IServiceCollection AddAuthenticationAndJwt(this IServiceCollection sc)
+    {
+        sc.AddAuthentication(configureOptions =>
+            {
+                configureOptions.DefaultAuthenticateScheme = AuthenticationScheme;
+                configureOptions.DefaultChallengeScheme = AuthenticationScheme;
+            })
+            .AddJwtBearer(options => { options.ClaimsIssuer = AuthenticationScheme; });
+        return sc;
+    }
+
+    public static IServiceCollection AddIdentity(this IServiceCollection services)
+    {
+        services
+            .AddIdentity<User, Role>()
+            .AddEntityFrameworkStores<ApplicationContext>()
+            .AddDefaultTokenProviders();
+        
+        // Configure Identity to use the same JWT claims as OpenIddict instead
+        // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+        // which saves you from doing the mapping in your authorization controller.
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+            options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+            options.ClaimsIdentity.RoleClaimType = Claims.Role;
+            options.ClaimsIdentity.EmailClaimType = Claims.Email;
+        });
+        
+        return services;
+    }
+
+    public static OpenIddictBuilder AddOpenIddictServer(this IServiceCollection services, 
+        IWebHostEnvironment environment)
+    {
+        return services
+            .AddOpenIddict()
+            .AddCore(options =>
+            {
+                options
+                    .UseEntityFrameworkCore()
+                    .UseDbContext<IdentityDbContext>();
+            })
+            .AddServer(options =>
+            {
+                options
+                    .AcceptAnonymousClients()
+                    .AllowPasswordFlow()
+                    .AllowRefreshTokenFlow();
+
+                options
+                    .SetTokenEndpointUris("/connect/token");
+                
+                // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                var cfg = options.UseAspNetCore();
+                if (environment.IsDevelopment() || environment.IsStaging())
+                {
+                    cfg.DisableTransportSecurityRequirement();   
+                }
+                
+                cfg.EnableTokenEndpointPassthrough();
+                
+                options
+                    .AddDevelopmentEncryptionCertificate()
+                    .AddDevelopmentSigningCertificate();
+            }).AddValidation(options =>
+            {
+                options.UseAspNetCore();
+                options.UseLocalServer();
+            });
+    }
+}

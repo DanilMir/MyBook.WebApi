@@ -14,7 +14,7 @@ using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants.Permissions;
 using static OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreConstants;
 
-namespace AuthorizationServer.Web.Controllers
+namespace MyBook.WebApi.Controllers
 {
     public class AuthorizationController : Controller
     {
