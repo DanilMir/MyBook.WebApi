@@ -1,11 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBook.Entity;
 using MyBook.Models;
 using NETCore.MailKit.Core;
+using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
+using static OpenIddict.Abstractions.OpenIddictConstants.Permissions;
+using static OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreConstants;
 
 namespace MyBook.WebApi.Controllers;
-
 
 [ApiController]
 [Route("[controller]")]
@@ -13,7 +21,9 @@ namespace MyBook.WebApi.Controllers;
 public class AuthController : Controller
 {
     private readonly UserManager<User> _userManager;
+
     private readonly SignInManager<User> _signInManager;
+
     // private readonly IEmailService _emailService;
     public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
     {
@@ -21,26 +31,107 @@ public class AuthController : Controller
         _signInManager = signInManager;
         // _emailService = emailService;
     }
-    
-    [HttpPost] 
-    [Route("Login")]
-    public async Task<IActionResult> Login(LoginViewModel model)
+
+    [HttpPost("~/login")]
+    [Produces("application/json")]
+    [Consumes("application/x-www-form-urlencoded")]
+    public async Task<IActionResult> Login([FromForm] AuthorizationData authorizationData)
     {
-        if (ModelState.IsValid)
+        var request = HttpContext.GetOpenIddictServerRequest();
+        if (request?.IsPasswordGrantType() == true)
         {
-            var result = await _signInManager.
-                PasswordSignInAsync(model.Email, model.Password, true, false);
+            var user = await _userManager.FindByNameAsync(request.Username);
+            if (user == null)
+            {
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
+                {
+                    [Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
+                    [Properties.ErrorDescription] =
+                        "The username/password couple is invalid."
+                });
+
+                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
             
-            if (result.Succeeded)
+            // Validate the username/password parameters and ensure the account is not locked out.
+            var result = await _signInManager
+                .CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+            if (!result.Succeeded)
             {
-                return Ok(new {token = ""});
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
+                {
+                    [Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
+                    [Properties.ErrorDescription] =
+                        "The username/password couple is invalid."
+                });
+
+                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
-            else
+
+            
+            // Create a new ClaimsPrincipal containing the claims that
+            // will be used to create an id_token, a token or a code.
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+
+            
+            // Set the list of scopes granted to the client application.
+            principal.SetScopes(new[]
             {
-                return NotFound(new {Error = "Неправильный логин и (или) пароль"});
-                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                Scopes.Email,
+                Scopes.Profile,
+                Scopes.Roles
+            }.Intersect(request.GetScopes()));
+
+            foreach (var claim in principal.Claims)
+            {
+                claim.SetDestinations(GetDestinations(claim, principal));
             }
+
+            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
-        return NotFound(new {Error = "Неправильный логин и (или) пароль"});
+
+        throw new NotImplementedException("The specified grant type is not implemented.");
+    }
+    
+
+    private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
+    {
+        // Note: by default, claims are NOT automatically included in the access and identity tokens.
+        // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
+        // whether they should be included in access tokens, in identity tokens or in both.
+
+        switch (claim.Type)
+        {
+            case OpenIddictConstants.Claims.Name:
+                yield return OpenIddictConstants.Destinations.AccessToken;
+
+                if (principal.HasScope(Scopes.Profile))
+                    yield return OpenIddictConstants.Destinations.IdentityToken;
+
+                yield break;
+
+            case OpenIddictConstants.Claims.Email:
+                yield return OpenIddictConstants.Destinations.AccessToken;
+
+                if (principal.HasScope(Scopes.Email))
+                    yield return OpenIddictConstants.Destinations.IdentityToken;
+
+                yield break;
+
+            case OpenIddictConstants.Claims.Role:
+                yield return OpenIddictConstants.Destinations.AccessToken;
+
+                if (principal.HasScope(Scopes.Roles))
+                    yield return OpenIddictConstants.Destinations.IdentityToken;
+
+                yield break;
+
+            // Never include the security stamp in the access and identity tokens, as it's a secret value.
+            case "AspNet.Identity.SecurityStamp": yield break;
+
+            default:
+                yield return OpenIddictConstants.Destinations.AccessToken;
+                yield break;
+        }
     }
 }

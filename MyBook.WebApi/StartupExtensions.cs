@@ -51,7 +51,7 @@ public static class StartupExtensions
             {
                 options
                     .UseEntityFrameworkCore()
-                    .UseDbContext<IdentityDbContext>();
+                    .UseDbContext<ApplicationContext>();
             })
             .AddServer(options =>
             {
@@ -61,7 +61,7 @@ public static class StartupExtensions
                     .AllowRefreshTokenFlow();
 
                 options
-                    .SetTokenEndpointUris("/connect/token");
+                    .SetTokenEndpointUris("/signup", "/login");
                 
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 var cfg = options.UseAspNetCore();
