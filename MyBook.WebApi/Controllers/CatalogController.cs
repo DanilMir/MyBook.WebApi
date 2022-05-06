@@ -48,7 +48,7 @@ public class CatalogController : Controller
     // [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "UserSub")]
     [HttpGet]
     [Route("Premium")]
-    [AuthorizeViaBearer(Roles = "UserSub")]
+    [AuthorizeViaBearer(Roles = "UserSub, Admin")]
     public async Task<IActionResult> Premium() =>
         Ok(await _context.Books
             .Include(a => a.Author)
