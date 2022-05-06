@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AuthorizationServer.Web.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBook.DataAccess;
+using OpenIddict.Validation.AspNetCore;
 
 namespace MyBook.WebApi.Controllers;
 
@@ -43,13 +45,16 @@ public class CatalogController : Controller
             .ToListAsync());
     
     // [Authorize(Roles = "UserSub, Admin")]
-    // [HttpGet]
-    // public async Task<IActionResult> Premium() =>
-    //     View(await _context.Books
-    //         .Include(a => a.Author)
-    //         .Where(s => s.SubType == 1)
-    //         .ToListAsync());
-    //
+    // [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "UserSub")]
+    [HttpGet]
+    [Route("Premium")]
+    [AuthorizeViaBearer(Roles = "UserSub")]
+    public async Task<IActionResult> Premium() =>
+        Ok(await _context.Books
+            .Include(a => a.Author)
+            .Where(s => s.SubType == 1)
+            .ToListAsync());
+    
     
     [HttpGet]
     [Route("GetBook/{id}")]
