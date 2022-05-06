@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBook.DataAccess;
+using MyBook.Entity;
+using MyBook.Entity.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,16 @@ builder.Services.AddControllersWithViews()
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
     );
 
+
+builder.Services.AddIdentity<User, Role>(option=>option.SignIn.RequireConfirmedEmail=true)
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = new PathString("/Home/AccessDenied");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();//???
 app.UseAuthorization();
 
 app.MapControllers();
