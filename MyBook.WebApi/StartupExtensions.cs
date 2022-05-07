@@ -1,5 +1,7 @@
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MyBook.DataAccess;
 using MyBook.Entity;
 using MyBook.Entity.Identity;
@@ -17,7 +19,20 @@ public static class StartupExtensions
                 configureOptions.DefaultAuthenticateScheme = AuthenticationScheme;
                 configureOptions.DefaultChallengeScheme = AuthenticationScheme;
             })
-            .AddJwtBearer(options => { options.ClaimsIssuer = AuthenticationScheme; });
+            .AddJwtBearer(options =>
+            {
+                options.ClaimsIssuer = AuthenticationScheme;
+                ////
+                options.TokenValidationParameters = new 
+                    TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("iNivDmHLpUA223sqsfhqGbMRdRj1PVkH")),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true
+                    };
+            });
         return sc;
     }
 
