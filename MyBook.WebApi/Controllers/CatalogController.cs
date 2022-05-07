@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBook.DataAccess;
+using MyBook.WebApi.Services;
 using OpenIddict.Validation.AspNetCore;
 
 namespace MyBook.WebApi.Controllers;
@@ -13,9 +14,13 @@ namespace MyBook.WebApi.Controllers;
 public class CatalogController : Controller
 {
     private readonly ApplicationContext _context;
+    private readonly AuthorizeManager _auth;
 
-    public CatalogController(ApplicationContext context) =>
+    public CatalogController(ApplicationContext context, AuthorizeManager auth)
+    {
         _context = context;
+        _auth = auth;
+    }
 
     [HttpGet]
     [Route("GetAllBooks")]
@@ -48,14 +53,20 @@ public class CatalogController : Controller
     // [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "UserSub")]
     [HttpGet]
     [Route("Premium")]
-    [AuthorizeViaBearer(Roles = "UserSub, Admin")]
-    public async Task<IActionResult> Premium() =>
-        Ok(await _context.Books
+    [AuthorizeViaBearer]
+    public async Task<IActionResult> Premium()
+    {
+        if (!await _auth.HasRole(HttpContext,"UserSub"))
+        {
+            return StatusCode(403);
+        }
+        
+        return Ok(await _context.Books
             .Include(a => a.Author)
             .Where(s => s.SubType == 1)
             .ToListAsync());
-    
-    
+    }
+
     [HttpGet]
     [Route("GetBook/{id}")]
     public async Task<IActionResult> BookDetails(Guid id)

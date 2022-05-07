@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MyBook.DataAccess;
+using MyBook.WebApi.Services;
 
 namespace MyBook.WebApi;
 
@@ -37,11 +38,11 @@ public class Startup
                         {
                             Reference = new OpenApiReference
                             {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             }
                         },
-                        new string[]{}
+                        new string[] { }
                     }
                 });
             }
@@ -68,11 +69,13 @@ public class Startup
             options.UseOpenIddict();
         });
         services.AddIdentity();
-        
-        
+
+
         services.AddControllersWithViews().AddNewtonsoftJson(options =>
-         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-     );
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
+
+        services.AddScoped<AuthorizeManager>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

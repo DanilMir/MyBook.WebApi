@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyBook.DataAccess;
 using MyBook.Entity;
 using MyBook.Entity.Identity;
+using MyBook.WebApi.Services;
 
 namespace MyBook.WebApi.Controllers;
 
@@ -15,7 +16,10 @@ public class SubController : Controller
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
 
-    public SubController(ApplicationContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
+    public SubController(
+        ApplicationContext context, 
+        UserManager<User> userManager, 
+        RoleManager<Role> roleManager)
     {
         _context = context;
         _roleManager = roleManager;
@@ -28,9 +32,8 @@ public class SubController : Controller
     //todo: если роль уже есть не позволять покупать
     public async Task<IActionResult> Pay(int subId)
     {
-        
         //переделать проверку роли на отдельную функцию
-        
+
         var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
         curUser.SubId = subId;
