@@ -9,6 +9,9 @@ using MyBook.WebApi.Services;
 
 namespace MyBook.WebApi.Controllers;
 
+[ApiController]
+[Route("[controller]")]
+[Produces("application/json")]
 public class SubController : Controller
 {
     private readonly ApplicationContext _context;

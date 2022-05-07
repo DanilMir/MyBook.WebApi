@@ -32,7 +32,7 @@ public class AuthController : Controller
         // _emailService = emailService;
     }
 
-    [HttpPost("~/login")]
+    [HttpPost("Login")]
     [Produces("application/json")]
     [Consumes("application/x-www-form-urlencoded")]
     public async Task<IActionResult> Login([FromForm] AuthorizationData authorizationData)
@@ -93,7 +93,7 @@ public class AuthController : Controller
         throw new NotImplementedException("The specified grant type is not implemented.");
     }
 
-    [HttpPost("~/signup")]
+    [HttpPost("SignUp")]
     [Produces("application/json")]
     [Consumes("application/x-www-form-urlencoded")]
     public async Task<IActionResult> SignUp([FromForm] RegisterViewModel model)
