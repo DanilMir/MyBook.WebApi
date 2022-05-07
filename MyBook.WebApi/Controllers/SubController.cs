@@ -15,15 +15,18 @@ public class SubController : Controller
 
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
+    private readonly AuthorizeManager _auth;
 
     public SubController(
         ApplicationContext context, 
         UserManager<User> userManager, 
-        RoleManager<Role> roleManager)
+        RoleManager<Role> roleManager,
+        AuthorizeManager auth)
     {
         _context = context;
         _roleManager = roleManager;
         _userManager = userManager;
+        _auth = auth;
     }
     
     [HttpGet]
@@ -32,10 +35,13 @@ public class SubController : Controller
     //todo: если роль уже есть не позволять покупать
     public async Task<IActionResult> Pay(int subId)
     {
-        //переделать проверку роли на отдельную функцию
-
         var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
+        if (await _auth.HasRole(HttpContext, "UserSub"))
+        {
+            return Conflict(error: "subscription already purchased");
+        }
+        
         curUser.SubId = subId;
         curUser.SubDateStart = DateTime.Now;
 
@@ -43,7 +49,7 @@ public class SubController : Controller
         await _userManager.AddToRoleAsync(curUser, "UserSub");
 
 
-        return Ok("Оплата прошла успешно!");
+        return Ok("payment was successful");
     }
     
     [HttpGet]
@@ -51,6 +57,10 @@ public class SubController : Controller
     [AuthorizeViaBearer]
     public async Task<IActionResult> ResetSub()
     {
+        if (!await _auth.HasRole(HttpContext, "UserSub"))
+        {
+            return Conflict(error: "nothing to reset");
+        }
         
         var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -58,6 +68,6 @@ public class SubController : Controller
         curUser.SubId = 4;
         await _userManager.RemoveFromRoleAsync(curUser, "UserSub");
         
-        return Ok("Сброс подписки выполнен успешно");
+        return Ok("subscription reset successful");
     }
 }
