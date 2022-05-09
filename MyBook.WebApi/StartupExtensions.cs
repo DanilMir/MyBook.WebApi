@@ -76,7 +76,7 @@ public static class StartupExtensions
                     .AllowRefreshTokenFlow();
 
                 options
-                    .SetTokenEndpointUris("/signup", "/login");
+                    .SetTokenEndpointUris("/Auth/SignUp", "/Auth/Login");
                 
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 var cfg = options.UseAspNetCore();
