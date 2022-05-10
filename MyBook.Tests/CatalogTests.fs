@@ -36,8 +36,8 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
                 JsonConvert.DeserializeObject<responseBooks> responseJson
 
             Assert.Equal(6, responseData.Length)
-            
-            
+
+
         [<Fact>]
         member this.``Get all free books``() =
             let client = this._factory.CreateClient()
@@ -56,56 +56,72 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
                 JsonConvert.DeserializeObject<responseBooks> responseJson
 
             Assert.Equal(1, responseData.Length)
-            
+
         [<Fact>]
         member this.``Get book by id``() =
             let client = this._factory.CreateClient()
 
-            let id = "8faa5631-6f76-437a-a924-1c5ad5806a5e";
+            let id =
+                "8faa5631-6f76-437a-a924-1c5ad5806a5e"
+
             let response =
                 client.GetAsync($"/Catalog/GetBook/{id}")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
-            
-            let responseJson = response.Result.Content.ReadAsStringAsync().Result
-            let responseData = JsonConvert.DeserializeObject<Book> responseJson
+
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            let responseData =
+                JsonConvert.DeserializeObject<Book> responseJson
+
             Assert.Equal("Тонкое искусство пофигизма", responseData.Title)
-            
+
         [<Fact>]
         member this.``Get book by wrong id returns NotFound``() =
             let client = this._factory.CreateClient()
 
-            let id = "10005631-6f76-437a-a924-1c5ad5806a5e";
+            let id =
+                "10005631-6f76-437a-a924-1c5ad5806a5e"
+
             let response =
                 client.GetAsync($"/Catalog/GetBook/{id}")
 
             Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
-            
+
         [<Fact>]
         member this.``Get author by id``() =
             let client = this._factory.CreateClient()
 
-            let id = "02788b50-5eae-42ce-a375-c0416840d687";
+            let id =
+                "02788b50-5eae-42ce-a375-c0416840d687"
+
             let response =
                 client.GetAsync($"/Catalog/GetAuthor/{id}")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
-            
-            let responseJson = response.Result.Content.ReadAsStringAsync().Result
-            let responseData = JsonConvert.DeserializeObject<Author> responseJson
+
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            let responseData =
+                JsonConvert.DeserializeObject<Author> responseJson
+
             Assert.Equal("Марк Мэнсон", responseData.FullName)
-            
+
         [<Fact>]
         member this.``Get author by wrong id returns NotFound``() =
             let client = this._factory.CreateClient()
 
-            let id = "10005631-6f76-437a-a924-1c5ad5806a5e";
+            let id =
+                "10005631-6f76-437a-a924-1c5ad5806a5e"
+
             let response =
                 client.GetAsync($"/Catalog/GetAuthor/{id}")
 
             Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
-            
-            
+
+
         [<Theory>]
         [<InlineData(1, "НИ", 2)>]
         [<InlineData(1, "искусство", 1)>]
@@ -115,14 +131,14 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
         [<InlineData(1, "Преступление", 1)>]
         [<InlineData(1, "н", 4)>]
         [<InlineData(1, "ва", 0)>]
-        member this.``Search books``(selectId : int, keyword : string, count: int) =
+        member this.``Search books``(selectId: int, keyword: string, count: int) =
             let client = this._factory.CreateClient()
 
             let response =
                 client.GetAsync($"/Catalog/Search/?selectId={selectId}&keyword={keyword}")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
-            
+
             let responseJson =
                 response.Result.Content.ReadAsStringAsync().Result
 
@@ -130,11 +146,11 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
 
             let responseData =
                 JsonConvert.DeserializeObject<responseBooks> responseJson
-            
+
             Assert.Equal(count, responseData.Length)
-            
-            
-            
+
+
+
         [<Theory>]
         [<InlineData(2, "ва", 0)>]
         [<InlineData(2, "марк", 1)>]
@@ -145,14 +161,14 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
         [<InlineData(2, "Достоевский", 1)>]
         [<InlineData(2, "авы", 0)>]
         [<InlineData(2, "ъ", 0)>]
-        member this.``Search authors``(selectId : int, keyword : string, count: int) =
+        member this.``Search authors``(selectId: int, keyword: string, count: int) =
             let client = this._factory.CreateClient()
 
             let response =
                 client.GetAsync($"/Catalog/Search/?selectId={selectId}&keyword={keyword}")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
-            
+
             let responseJson =
                 response.Result.Content.ReadAsStringAsync().Result
 
@@ -160,9 +176,9 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
 
             let responseData =
                 JsonConvert.DeserializeObject<responseAuthors> responseJson
-            
+
             Assert.Equal(count, responseData.Length)
-        
+
         [<Fact>]
         member this.``Wrong selectId``() =
             let client = this._factory.CreateClient()
@@ -171,7 +187,7 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
                 client.GetAsync($"/Catalog/Search/?selectId={0}&keyword=кто")
 
             Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
-            
+
         [<Fact>]
         member this.``Wrong keyword``() =
             let client = this._factory.CreateClient()

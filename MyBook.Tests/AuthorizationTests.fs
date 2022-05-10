@@ -22,12 +22,12 @@ type ResponseError =
 type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
     class
         member this._factory = factory
-        
-        
+
+
         interface IClassFixture<MyBookWebApplicationFactory>
-        
+
         [<Fact>]
-        member this. ``Register user with valid data should create new user`` () =
+        member this.``Register user with valid data should create new user``() =
 
             let client = this._factory.CreateClient()
 
@@ -41,14 +41,17 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/SignUp", content)
+
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
 
             let responseJson =
                 response.Result.Content.ReadAsStringAsync().Result
+
             let responseData =
                 JsonSerializer.Deserialize<ResponseToken> responseJson
 
@@ -56,7 +59,7 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
 
         [<Fact>]
-        member this. ``Register user with invalid data should return BadRequest`` () =
+        member this.``Register user with invalid data should return BadRequest``() =
 
             let client = this._factory.CreateClient()
 
@@ -70,15 +73,17 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/SignUp", content)
+
             Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
-        
-        
+
+
         [<Fact>]
-        member this. ``Register with already registered username should return BadRequest`` () =
+        member this.``Register with already registered username should return BadRequest``() =
 
             let client = this._factory.CreateClient()
 
@@ -92,15 +97,17 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/SignUp", content)
+
             Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
-        
+
         [<Fact>]
-        member this. ``Correct Login should returns valid JWT`` () =
-            
+        member this.``Correct Login should returns valid JWT``() =
+
             let client = this._factory.CreateClient()
 
             let form =
@@ -110,23 +117,26 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/Login", content)
+
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
 
             let responseJson =
                 response.Result.Content.ReadAsStringAsync().Result
+
             let responseData =
                 JsonSerializer.Deserialize<ResponseToken> responseJson
 
             Assert.NotNull(responseData.access_token)
-            
-            
+
+
         [<Fact>]
-        member this. ``Incorrect user name data should return BadRequest `` () =
-            
+        member this.``Incorrect user name data should return BadRequest ``() =
+
             let client = this._factory.CreateClient()
 
             let form =
@@ -136,17 +146,19 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/Login", content)
+
             Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
-            
-            
-            
+
+
+
         [<Fact>]
-        member this. ``Incorrect password data should return BadRequest `` () =
-            
+        member this.``Incorrect password data should return BadRequest ``() =
+
             let client = this._factory.CreateClient()
 
             let form =
@@ -156,9 +168,11 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
 
             let content =
                 new FormUrlEncodedContent(form)
+
             content.Headers.ContentType <- Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded")
 
             let response =
                 client.PostAsync($"/Auth/Login", content)
+
             Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
-        end
+    end
