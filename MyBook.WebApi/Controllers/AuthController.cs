@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +36,7 @@ public class AuthController : Controller
     [HttpPost("Login")]
     [Produces("application/json")]
     [Consumes("application/x-www-form-urlencoded")]
-    public async Task<IActionResult> Login([FromForm] AuthorizationData authorizationData)
+    public async Task<IActionResult> Login([FromForm] AuthBody authBody)
     {
         var request = HttpContext.GetOpenIddictServerRequest();
         if (request?.IsPasswordGrantType() == true)
@@ -102,15 +103,19 @@ public class AuthController : Controller
 
         if (request?.IsPasswordGrantType() == true)
         {
+            byte[] imageResult = new WebClient().DownloadData("https://i.imgur.com/IVdsjse.png");
+            var img = Convert.ToBase64String(imageResult);
+            
             var user = new User
             {
                 SubId = 4,
                 SubDateStart = default(DateTime),
-                Email = model.Email,
+                Email = model.email,
                 UserName = model.username,
                 Name = model.username,
-                LastName = model.Lastname,
-                Image = Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("wwwroot/img/user.png")),
+                LastName = model.lastname,
+                Image = img,
+                // Image = Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("wwwroot/img/user.png")),
                 EmailConfirmed = false,
                 LockoutEnabled = false
             };

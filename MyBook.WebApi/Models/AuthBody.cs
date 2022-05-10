@@ -2,7 +2,7 @@
 
 namespace MyBook.Models;
 
-public class AuthorizationData
+public class AuthBody
 {
     [DefaultValue("password")]
     public string grant_type { get; set; }
