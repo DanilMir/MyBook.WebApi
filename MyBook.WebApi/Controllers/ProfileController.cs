@@ -66,7 +66,10 @@ public class ProfileController : Controller
             var user = await _userManager.FindByNameAsync(User.Identity!.Name);
             if (user != null)
             {
-                //ToDo: пароль такой же ли?
+                if (model.NewPassword == model.OldPassword)
+                {
+                    return Conflict("the new password is the same as the old one");
+                }
 
                 var result =
                     await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -211,7 +214,7 @@ public class ProfileController : Controller
         return NoContent();
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("RemoveFromFavorites")]
     public async Task<IActionResult> RemoveFromFavorites(Guid id)
     {

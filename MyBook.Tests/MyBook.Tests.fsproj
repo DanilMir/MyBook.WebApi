@@ -10,9 +10,11 @@
     <ItemGroup>
         <Compile Include="MyBookWebApplicationFactory.fs" />
         <Compile Include="ResponseToken.fs" />
+        <Compile Include="AuthorizeUser.fs" />
         <Compile Include="AuthorizationTests.fs" />
         <Compile Include="CatalogTests.fs" />
         <Compile Include="ExampleTest.fs" />
+        <Compile Include="ProfileTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
