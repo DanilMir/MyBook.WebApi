@@ -9,6 +9,7 @@ open Newtonsoft.Json
 open Xunit
 
 type responseBooks = List<Book>
+type responseAuthors = List<Author>
 
 [<Collection("Catalog tests")>]
 type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
@@ -105,17 +106,78 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
             Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
             
             
-        [<Fact>]
-        member this.``Search``() =
+        [<Theory>]
+        [<InlineData(1, "НИ", 2)>]
+        [<InlineData(1, "искусство", 1)>]
+        [<InlineData(1, "тонкое", 1)>]
+        [<InlineData(1, "Рагнарёк", 1)>]
+        [<InlineData(1, "Обладать", 1)>]
+        [<InlineData(1, "Преступление", 1)>]
+        [<InlineData(1, "н", 4)>]
+        [<InlineData(1, "ва", 0)>]
+        member this.``Search books``(selectId : int, keyword : string, count: int) =
             let client = this._factory.CreateClient()
 
-            let id = "02788b50-5eae-42ce-a375-c0416840d687";
             let response =
-                client.GetAsync($"/Catalog/GetAuthor/{id}")
+                client.GetAsync($"/Catalog/Search/?selectId={selectId}&keyword={keyword}")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
             
-            let responseJson = response.Result.Content.ReadAsStringAsync().Result
-            let responseData = JsonConvert.DeserializeObject<Author> responseJson
-            Assert.Equal("Марк Мэнсон", responseData.FullName)
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            Assert.NotEmpty(responseJson)
+
+            let responseData =
+                JsonConvert.DeserializeObject<responseBooks> responseJson
+            
+            Assert.Equal(count, responseData.Length)
+            
+            
+            
+        [<Theory>]
+        [<InlineData(2, "ва", 0)>]
+        [<InlineData(2, "марк", 1)>]
+        [<InlineData(2, "а", 2)>]
+        [<InlineData(2, "Антония", 1)>]
+        [<InlineData(2, "Сьюзен", 1)>]
+        [<InlineData(2, "и", 3)>]
+        [<InlineData(2, "Достоевский", 1)>]
+        [<InlineData(2, "авы", 0)>]
+        [<InlineData(2, "ъ", 0)>]
+        member this.``Search authors``(selectId : int, keyword : string, count: int) =
+            let client = this._factory.CreateClient()
+
+            let response =
+                client.GetAsync($"/Catalog/Search/?selectId={selectId}&keyword={keyword}")
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+            
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            Assert.NotEmpty(responseJson)
+
+            let responseData =
+                JsonConvert.DeserializeObject<responseAuthors> responseJson
+            
+            Assert.Equal(count, responseData.Length)
+        
+        [<Fact>]
+        member this.``Wrong selectId``() =
+            let client = this._factory.CreateClient()
+
+            let response =
+                client.GetAsync($"/Catalog/Search/?selectId={0}&keyword=кто")
+
+            Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
+            
+        [<Fact>]
+        member this.``Wrong keyword``() =
+            let client = this._factory.CreateClient()
+
+            let response =
+                client.GetAsync($"/Catalog/Search/?selectId={1}&keyword=")
+
+            Assert.Equal(HttpStatusCode.NotFound, response.Result.StatusCode)
     end
