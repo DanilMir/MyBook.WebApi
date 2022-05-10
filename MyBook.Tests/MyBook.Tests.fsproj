@@ -12,6 +12,7 @@
         <Compile Include="ResponseToken.fs" />
         <Compile Include="AuthorizationTests.fs" />
         <Compile Include="CatalogTests.fs" />
+        <Compile Include="ExampleTest.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
@@ -23,6 +24,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

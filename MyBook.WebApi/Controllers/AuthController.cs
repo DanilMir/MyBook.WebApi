@@ -124,17 +124,8 @@ public class AuthController : Controller
 
             if (result.Succeeded)
             {
-                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.AddToRoleAsync(user, "User");
 
-                //var link = Url.Action(nameof(VerifyEmail), "Auth", new { userId = user.Id, code },Request.Scheme,Request.Host.ToString());
-
-                //var message = new Message(new string[] { model.Email }, "Подтверждение почты", $"<h2>Добро пожаловать на MyBook!</h2><br><p>Пожалуйста, подтвердите свою почту, перейдя по ссылке</p><a href='{link}'>Подтвердить регистрацию</a>");
-
-                //await _emailService.SendEmailAsync(message);
-
-                //return RedirectToAction("EmailVerification");
-                
                 var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
                 principal.SetScopes(new[]
