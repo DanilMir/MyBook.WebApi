@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.Entity", "MyBook.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBook.DataAccess", "MyBook.DataAccess\MyBook.DataAccess.csproj", "{C5C0C823-1791-4225-8C11-DCE628168A7C}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MyBook.Tests", "MyBook.Tests\MyBook.Tests.fsproj", "{95A4C05A-6174-4A8E-87C1-D5A53D31E15C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5C0C823-1791-4225-8C11-DCE628168A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95A4C05A-6174-4A8E-87C1-D5A53D31E15C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95A4C05A-6174-4A8E-87C1-D5A53D31E15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95A4C05A-6174-4A8E-87C1-D5A53D31E15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95A4C05A-6174-4A8E-87C1-D5A53D31E15C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

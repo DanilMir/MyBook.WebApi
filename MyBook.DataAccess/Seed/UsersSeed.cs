@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBook.Entity;
@@ -9,6 +10,9 @@ public partial class Seeds
 {
     public static void CreateUsers(ModelBuilder modelBuilder)
     {
+        byte[] result = new WebClient().DownloadData("https://i.imgur.com/IVdsjse.png");
+        var img = Convert.ToBase64String(result);
+        
         modelBuilder.Entity<User>(b =>
         {
             b.HasData(new
@@ -25,7 +29,9 @@ public partial class Seeds
                 TwoFactorEnabled = false,
                 LockoutEnabled = true,
                 AccessFailedCount = 0,
-                Image = Convert.ToBase64String(File.ReadAllBytes("wwwroot/img/user.png")),
+                //https://i.imgur.com/IVdsjse.png
+                Image = img,
+                // Image = Convert.ToBase64String(File.ReadAllBytes("wwwroot/img/user.png")),
                 LastName = "Admin",
                 Name = "Admin",
                 SubId = 4,
