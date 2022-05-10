@@ -31,10 +31,11 @@ type MyBookWebApplicationFactory() =
                 EntityFrameworkServiceCollectionExtensions.AddDbContext<ApplicationContext>(
                     services,
                     (fun config ->
-                        let connectionString =
-                            ctx.Configuration.GetConnectionString("sqlConnection")
+//                        let connectionString =
+//                            ctx.Configuration.GetConnectionString("sqlConnection")
 
-                        config.UseNpgsql(connectionString) |> ignore
+                        config.UseInMemoryDatabase("InMemoryDbForTesting") |> ignore
+//                        config.UseNpgsql(connectionString) |> ignore
 
                         config.UseOpenIddict() |> ignore
                     )
