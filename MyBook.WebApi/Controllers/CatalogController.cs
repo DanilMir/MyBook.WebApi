@@ -35,20 +35,6 @@ public class CatalogController : Controller
             .Where(s => s.SubType == 0)
             .ToListAsync());
     
-    [HttpGet]
-    [Route("GetTopBooks")]
-    public async Task<IActionResult> TopBooks() =>
-        Ok(await _context.Books
-            .Include(a => a.Author)
-            .ToListAsync());
-    
-    [HttpGet]
-    [Route("GetNovelties")]
-    public async Task<IActionResult> Novelties() =>
-        Ok(await _context.Books
-            .Include(a => a.Author)
-            .ToListAsync());
-    
     // [Authorize(Roles = "UserSub, Admin")]
     // [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "UserSub")]
     [HttpGet]

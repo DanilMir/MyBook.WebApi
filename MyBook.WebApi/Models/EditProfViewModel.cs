@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MyBook.Models;
 
-public class EditProfileViewModel
+public class EditProfViewModel
 {
     [Required]
     public string Name { get; set; } = null!;
@@ -12,9 +12,4 @@ public class EditProfileViewModel
     public string LastName { get; set; } = null!;
     [Required]
     public string Email { get; set; } = null!;
-
-    
-    public string Image { get; set; } = null!;
-    
-    public Subscription Sub { get; set; } = null!;
 }
