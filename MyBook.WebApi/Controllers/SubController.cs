@@ -35,11 +35,15 @@ public class SubController : Controller
     [HttpGet]
     [Route("Pay")]
     [AuthorizeViaBearer]
-    //todo: если роль уже есть не позволять покупать
     public async Task<IActionResult> Pay(int subId)
     {
         var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
+        if (subId < 1 || subId > 4)
+        {
+            return BadRequest($"subId{subId} is not exist");
+        }
+        
         if (await _auth.HasRole(HttpContext, "UserSub"))
         {
             return Conflict(error: "subscription already purchased");

@@ -1,9 +1,13 @@
 ﻿module MyBook.Tests.ProfileTests
 
+open System.Collections.Generic
+open System.IO
 open System.Net
 open System.Net.Http
 open System.Net.Http.Headers
+open System.Reflection
 open System.Text
+open Microsoft.AspNetCore.Http
 open MyBook.Models
 open Newtonsoft.Json
 open Xunit
@@ -97,6 +101,35 @@ type ProfileTests(factory: MyBookWebApplicationFactory) =
 
             let response =
                 client.GetAsync($"/Profile/Favorites")
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+            
+            
+        [<Fact>]
+        member this.``Add To Favorites``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let id =
+               "8faa5631-6f76-437a-a924-1c5ad5806a5e"
+            
+            let response =
+                client.GetAsync($"/Profile/AddToFavorites?id={id}")
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+            
+            
+        [<Fact>]
+        member this.``Reset Image``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let response =
+                client.GetAsync($"/Profile/ResetImage")
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
     end

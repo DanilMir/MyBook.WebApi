@@ -18,7 +18,6 @@ type ResponseError =
       error_uri: string }
 
 
-[<Collection("OpenIddict tests")>]
 type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
     class
         member this._factory = factory

@@ -1,4 +1,5 @@
-﻿using AuthorizationServer.Web.Domain;
+﻿using System.Net;
+using AuthorizationServer.Web.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,8 +50,7 @@ public class ProfileController : Controller
 
         var model = new EditProfileViewModel
         {
-            Email = user.Email, Name = user.Name, LastName = user.LastName, Image = user.Image,
-            Sub = sub
+            Email = user.Email, Name = user.Name, LastName = user.LastName, Image = user.Image, Sub = user.Sub
         };
         return Ok(model);
     }
@@ -116,10 +116,10 @@ public class ProfileController : Controller
             }
         }
 
-        return BadRequest();
+        return Conflict();
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("ResetImage")]
     public async Task<ActionResult> ResetImage()
     {
@@ -128,7 +128,9 @@ public class ProfileController : Controller
             var user = await _userManager.FindByNameAsync(User.Identity?.Name);
             if (user != null)
             {
-                user.Image = Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("wwwroot/img/user.png"));
+                byte[] imgResult = new WebClient().DownloadData("https://i.imgur.com/IVdsjse.png");
+                var img = Convert.ToBase64String(imgResult);
+                user.Image = img;
 
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
@@ -146,8 +148,8 @@ public class ProfileController : Controller
 
     [HttpPost]
     [Route("EditProfile")]
-    //todo: remove sub, image fields
-    public async Task<IActionResult> EditProfile([FromForm] EditProfileViewModel model)
+
+    public async Task<IActionResult> EditProfile([FromForm] EditProfViewModel model)
     {
         ModelState.Remove("Image");
         ModelState.Remove("Sub");
@@ -163,12 +165,7 @@ public class ProfileController : Controller
                 user.UserName = model.Email;
                 user.Name = model.Name;
                 user.LastName = model.LastName;
-
-                //roflan
-                model.Image = user.Image;
-                model.Sub = sub;
-                //model.SubDurationLeft = sub.Duration - DateTime.Now.Subtract(user.SubDateStart).Days;
-
+                
                 var result = await _userManager.UpdateAsync(user);
 
                 if (oldEmail != user.Email)
@@ -191,7 +188,7 @@ public class ProfileController : Controller
     }
 
 
-    [HttpPost]
+    [HttpGet]
     [Route("AddToFavorites")]
     public async Task<IActionResult> AddToFavorites(Guid id)
     {
@@ -246,11 +243,6 @@ public class ProfileController : Controller
     {
         var user = await _context.Users.Include(x => x.FavoriteBooks).ThenInclude(x=> x.Author)
             .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-
-        if (user is null)
-        {
-            return BadRequest("user is not found");
-        }
 
         var result = user.FavoriteBooks.Select(book => new
         {

@@ -15,6 +15,7 @@
         <Compile Include="CatalogTests.fs" />
         <Compile Include="ExampleTest.fs" />
         <Compile Include="ProfileTests.fs" />
+        <Compile Include="SubTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
