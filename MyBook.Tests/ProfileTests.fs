@@ -120,16 +120,5 @@ type ProfileTests(factory: MyBookWebApplicationFactory) =
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
             
-            
-        [<Fact>]
-        member this.``Reset Image``() =
-            let myFactory = new MyBookWebApplicationFactory()
-            let client = myFactory.CreateClient()
-            let token = AuthorizeUser
-            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
-
-            let response =
-                client.GetAsync($"/Profile/ResetImage")
-
-            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+           
     end

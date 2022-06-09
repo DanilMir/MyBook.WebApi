@@ -18,11 +18,6 @@ type MyBookWebApplicationFactory() =
         ``base``.ConfigureWebHost(builder)
         builder.UseEnvironment "Development" |> ignore
 
-        //        builder.ConfigureAppConfiguration (fun config ->
-//            UserSecretsConfigurationExtensions.AddUserSecrets(config, Assembly.GetExecutingAssembly())
-//            |> ignore)
-//        |> ignore
-
         builder.ConfigureServices (fun ctx services ->
             services
             |> ServiceCollectionDescriptorExtensions.RemoveAll<DbContextOptions<ApplicationContext>>
