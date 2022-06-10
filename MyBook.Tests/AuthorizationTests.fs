@@ -28,7 +28,8 @@ type AuthorizationControllerTests(factory: MyBookWebApplicationFactory) =
         [<Fact>]
         member this.``Register user with valid data should create new user``() =
 
-            let client = this._factory.CreateClient()
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
 
             let form =
                 [| KeyValuePair<string, string>("grant_type", "password")
