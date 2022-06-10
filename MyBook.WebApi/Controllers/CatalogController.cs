@@ -1,8 +1,10 @@
 ﻿using AuthorizationServer.Web.Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBook.DataAccess;
+using MyBook.Entity;
 using MyBook.WebApi.Services;
 using OpenIddict.Validation.AspNetCore;
 
@@ -16,8 +18,11 @@ public class CatalogController : Controller
     private readonly ApplicationContext _context;
     private readonly AuthorizeManager _auth;
 
-    public CatalogController(ApplicationContext context, AuthorizeManager auth)
+    private readonly UserManager<User> _userManager;
+    
+    public CatalogController(ApplicationContext context, AuthorizeManager auth, UserManager<User> userManager)
     {
+        _userManager = userManager;
         _context = context;
         _auth = auth;
     }
@@ -53,6 +58,7 @@ public class CatalogController : Controller
 
     [HttpGet]
     [Route("GetBook/{id}")]
+    [AuthorizeViaBearer]
     public async Task<IActionResult> BookDetails(Guid id)
     {
         var book = await _context.Books
@@ -61,6 +67,17 @@ public class CatalogController : Controller
 
         if (book is null)
             return NotFound(new {Error = "Unexpected id"});
+        
+        
+
+        if (book.SubType == 1)
+        {
+            if (!await _auth.HasRole(HttpContext,"UserSub") && !await _auth.HasRole(HttpContext,"Admin"))
+            {
+                return StatusCode(403);
+            }
+            
+        }
 
         return Ok(book);
     }

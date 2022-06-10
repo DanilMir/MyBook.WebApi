@@ -14,7 +14,6 @@ open MyBook.Tests.AuthorizeUser
 type responseBooks = List<Book>
 type responseAuthors = List<Author>
 
-[<Collection("Catalog tests")>]
 type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
     class
         member this._factory = factory
@@ -88,10 +87,14 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
         
         [<Fact>]
         member this.``Get book by id``() =
-            let client = this._factory.CreateClient()
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
 
             let id =
-                "8faa5631-6f76-437a-a924-1c5ad5806a5e"
+                "2a4751dc-1779-4bd4-a876-dbafa232e5cf"
 
             let response =
                 client.GetAsync($"/Catalog/GetBook/{id}")
@@ -104,11 +107,39 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
             let responseData =
                 JsonConvert.DeserializeObject<Book> responseJson
 
-            Assert.Equal("Тонкое искусство пофигизма", responseData.Title)
+            Assert.Equal("Преступление и наказание", responseData.Title)
+            
+        [<Fact>]
+        member this.``Get premium book by id with premium``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let id =
+                "cca20620-56c4-40d3-bfc3-7d88bff9ea1f"
+
+            let response =
+                client.GetAsync($"/Catalog/GetBook/{id}")
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            let responseData =
+                JsonConvert.DeserializeObject<Book> responseJson
+
+            Assert.Equal("1984", responseData.Title)
 
         [<Fact>]
         member this.``Get book by wrong id returns NotFound``() =
-            let client = this._factory.CreateClient()
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
 
             let id =
                 "10005631-6f76-437a-a924-1c5ad5806a5e"
