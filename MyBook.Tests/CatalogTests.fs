@@ -1,12 +1,15 @@
 ﻿module MyBook.Tests.CatalogTests
 
 open System.Net
+open System.Net.Http.Headers
 open System.Text.Json
 open Microsoft.AspNetCore.Mvc.Testing
 open MyBook.Entity
 open MyBook.WebApi
 open Newtonsoft.Json
 open Xunit
+open MyBook.Tests.AuthorizeUserWithSub
+open MyBook.Tests.AuthorizeUser
 
 type responseBooks = List<Book>
 type responseAuthors = List<Author>
@@ -56,7 +59,33 @@ type CatalogControllerTests(factory: MyBookWebApplicationFactory) =
                 JsonConvert.DeserializeObject<responseBooks> responseJson
 
             Assert.Equal(1, responseData.Length)
+            
+            
+        [<Fact>]
+        member this.``Get all premium books``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
 
+            let token = AuthorizeUserWithSub
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+            
+            let response =
+                client.GetAsync($"/Catalog/Premium")
+                
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+
+            let responseJson =
+                response.Result.Content.ReadAsStringAsync().Result
+
+            Assert.NotEmpty(responseJson)
+
+            let responseData =
+                JsonConvert.DeserializeObject<responseBooks> responseJson
+
+            Assert.Equal(5, responseData.Length)
+            
+        
         [<Fact>]
         member this.``Get book by id``() =
             let client = this._factory.CreateClient()

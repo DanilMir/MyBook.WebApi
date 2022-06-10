@@ -78,11 +78,8 @@ public class ProfileController : Controller
                 {
                     return Ok("password changed successfully");
                 }
-                else
-                    foreach (var error in result.Errors)
-                    {
-                        errors.Add(error.Description);
-                    }
+
+                errors.AddRange(result.Errors.Select(error => error.Description));
             }
             else
                 errors.Add("user is not found");
@@ -90,60 +87,7 @@ public class ProfileController : Controller
 
         return BadRequest(errors);
     }
-
-    [HttpPost]
-    [Route("ChangeImage")]
-    public async Task<ActionResult> ChangeImage([FromForm] ChangeProfileImageViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity?.Name);
-            if (user != null)
-            {
-                byte[] imageData;
-                using (var binaryReader = new BinaryReader(model.Image.OpenReadStream()))
-                    imageData = binaryReader.ReadBytes((int) model.Image.Length);
-
-                user.Image = Convert.ToBase64String(imageData);
-
-                var result = await _userManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    return Ok("updated profile photo");
-                }
-                else
-                    return BadRequest("user is not found");
-            }
-        }
-
-        return Conflict();
-    }
-
-    [HttpGet]
-    [Route("ResetImage")]
-    public async Task<ActionResult> ResetImage()
-    {
-        if (ModelState.IsValid)
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity?.Name);
-            if (user != null)
-            {
-                byte[] imgResult = new WebClient().DownloadData("https://i.imgur.com/IVdsjse.png");
-                var img = Convert.ToBase64String(imgResult);
-                user.Image = img;
-
-                var result = await _userManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    return Ok("profile photo reset");
-                }
-                else
-                    return BadRequest("user is not found");
-            }
-        }
-
-        return BadRequest();
-    }
+    
 
 
     [HttpPost]
@@ -172,15 +116,13 @@ public class ProfileController : Controller
                 {
                     await _signInManager.SignOutAsync();
                     return Ok();
-                    // return RedirectToAction("Index", "Home");
                 }
 
                 if (result.Succeeded)
                 {
                     return Ok("changes saved!");
                 }
-                else
-                    return BadRequest("user is not found");
+                return BadRequest("user is not found");
             }
         }
 
@@ -201,14 +143,10 @@ public class ProfileController : Controller
             return BadRequest("book is not exist");
         }
 
-        if (user is not null && !user.FavoriteBooks.Contains(book))
-        {
-            user.FavoriteBooks.Add(book);
-            await _context.SaveChangesAsync();
-            return Ok("book added to favorites");
-        }
-
-        return NoContent();
+        if (user is null || user.FavoriteBooks.Contains(book)) return NoContent();
+        user.FavoriteBooks.Add(book);
+        await _context.SaveChangesAsync();
+        return Ok("book added to favorites");
     }
 
     [HttpGet]

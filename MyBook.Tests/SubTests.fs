@@ -4,6 +4,7 @@ open System.Net
 open System.Net.Http.Headers
 open Xunit
 open MyBook.Tests.AuthorizeUser
+open MyBook.Tests.AuthorizeUserWithSub
 
 type SubTests(factory: MyBookWebApplicationFactory) =
     class
@@ -21,6 +22,17 @@ type SubTests(factory: MyBookWebApplicationFactory) =
             
             let response = client.GetAsync($"/Sub/Pay?subId=2")
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
+            
+        [<Fact>]
+        member this. ``Pay for sub if already subscriber should return Conflict`` () =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            
+            let token = AuthorizeUserWithSub
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+            
+            let response = client.GetAsync($"/Sub/Pay?subId=2")
+            Assert.Equal(HttpStatusCode.Conflict, response.Result.StatusCode)
             
             
         [<Fact>]
@@ -40,11 +52,10 @@ type SubTests(factory: MyBookWebApplicationFactory) =
             let myFactory = new MyBookWebApplicationFactory()
             let client = myFactory.CreateClient()
             
-            let token = AuthorizeUser
+            let token = AuthorizeUserWithSub
             client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
             
-            let response = client.GetAsync($"/Sub/Pay?subId=2")
-            response = client.GetAsync($"/Sub/ResetSub")
+            let response = client.GetAsync($"/Sub/ResetSub")
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
 
     end

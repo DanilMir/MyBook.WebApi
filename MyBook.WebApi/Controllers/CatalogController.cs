@@ -35,14 +35,12 @@ public class CatalogController : Controller
             .Where(s => s.SubType == 0)
             .ToListAsync());
     
-    // [Authorize(Roles = "UserSub, Admin")]
-    // [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "UserSub")]
     [HttpGet]
     [Route("Premium")]
     [AuthorizeViaBearer]
     public async Task<IActionResult> Premium()
     {
-        if (!await _auth.HasRole(HttpContext,"UserSub"))
+        if (!await _auth.HasRole(HttpContext,"UserSub") && !await _auth.HasRole(HttpContext,"Admin"))
         {
             return StatusCode(403);
         }

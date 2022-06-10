@@ -120,5 +120,72 @@ type ProfileTests(factory: MyBookWebApplicationFactory) =
 
             Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
             
+        
+        [<Fact>]
+        member this.``Add To Favorites a nonexistent book should return BadRequest``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let id =
+               "8faa5631-6f76-437a-a924-1c5ad5826a5e"
+            
+            let response =
+                client.GetAsync($"/Profile/AddToFavorites?id={id}")
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
            
+        
+        [<Fact>]
+        member this.``Remove from favorites a nonexistent book should return BadRequest``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let id =
+               "8faa5631-6f76-437a-a924-1c5ad5826a5e"
+            
+            let response =
+                client.GetAsync($"/Profile/RemoveFromFavorites?id={id}")
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
+        
+        [<Fact>]
+        member this.``Remove from favorites a book that not in fav should return BadRequest``() =
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let id =
+               "2a4751dc-1779-4bd4-a876-dbafa232e5cf"
+            
+            let response =
+                client.GetAsync($"/Profile/RemoveFromFavorites?id={id}")
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.Result.StatusCode)
+        
+        [<Fact>]
+        member this.``EditProfile``() =
+
+            let myFactory = new MyBookWebApplicationFactory()
+            let client = myFactory.CreateClient()
+            let token = AuthorizeUser
+            client.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", token)
+
+            let content =
+                new MultipartFormDataContent()
+                
+            content.Add(new StringContent("hb5"), "name")
+            content.Add(new StringContent("hb4"), "lastname")
+            content.Add(new StringContent("2@mail.ru"), "email")
+
+            
+
+            let response =
+                client.PostAsync($"/Profile/EditProfile", content)
+
+            Assert.Equal(HttpStatusCode.OK, response.Result.StatusCode)
     end
